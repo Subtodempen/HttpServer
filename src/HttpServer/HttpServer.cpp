@@ -1,6 +1,6 @@
 #include "HttpServer.hpp"
 
-#define PORT 1234
+#define PORT 1236
 
 
 void HttpServer::welcome(){
@@ -67,10 +67,11 @@ void HttpServer::serverRun(){
 
     int clientSocket;
 
-    while(getIsRunning()){
-        clientSocket = socket.acceptClient();
-    
+    while((clientSocket = socket.acceptClient()) != -1){
         handleClient(clientSocket);
+    
+        if(!getIsRunning())
+            break;
     }
 
     setIsRunning(false);
@@ -90,13 +91,16 @@ void HttpServer::serverRunThreads(){
         return;
     }
 
-    while((clientSocket = socket.acceptClient()) != -1 || getIsRunning()){
+    while((clientSocket = socket.acceptClient()) != -1){
         //create new thread
         //dont wait for thread to finish
 
         std::thread thread(&HttpServer::handleClient, this, clientSocket);
 
         thread.detach();
+
+        if(getIsRunning())
+            break;
     }
 
     setIsRunning(false);

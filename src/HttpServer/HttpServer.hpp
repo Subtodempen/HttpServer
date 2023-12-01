@@ -5,7 +5,7 @@
 #include "../HttpResponce/HttpResponce.hpp"
 
 #include <thread>
-#include <mutex>
+#include <atomic>
 
 class HttpServer{
     public:
@@ -18,21 +18,16 @@ class HttpServer{
         //void serverRunNonBlock();
 
         void setIsRunning(bool value){
-            std::lock_guard<std::mutex> lock(isRunningMutex);
-
-            isRunning = value;
+            isRunning.store(value, std::memory_order_relaxed);
         }
 
         bool getIsRunning(){
-            std::lock_guard<std::mutex> lock(isRunningMutex);
-            
-            return isRunning;
+            return isRunning.load(std::memory_order_relaxed);
         }
 
     private:
-        bool isRunning;
-        std::mutex isRunningMutex;
-
+        std::atomic<bool> isRunning;
+        
         bool verbose; // verbose decides whether to print or not to
 
         int setupSock(SocketHelper& socket);
