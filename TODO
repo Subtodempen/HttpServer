@@ -1,0 +1,8 @@
+1) allow more than one cpp in files 
+2) create httpServer class
+3) fuzz test 
+4) create a config file using json 
+5) fix files and create a set file dest that can be changed in the config
+6) do something with the c++
+7) add verbose to config
+8) check if user is on windows usng pre processing
