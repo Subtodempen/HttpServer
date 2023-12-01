@@ -3,7 +3,7 @@ working on a http server in c++, its called PrinceServer. so far only handles re
 
 # Usage
 
-Prince server is unique as it allows <cpp></cpp> tags in the html.
+Prince server is unique as it allows "<cpp></cpp>" tags in the html.
 
 the cpp inside these tags gets compiled and ran on the server
 
