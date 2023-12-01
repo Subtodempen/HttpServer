@@ -1,5 +1,5 @@
 # HttpServer
-working on a http server in c++, its called PrinceServer. so far only handles requests but soon will have multithreading to hadnle muliple connections at once.
+working on a http server in c++, its called PrinceServer. has multithreading just need to add non-blocking sockets.
 
 # Usage
 
