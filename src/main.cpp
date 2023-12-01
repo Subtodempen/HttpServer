@@ -1,36 +1,22 @@
-#include "Socket/socket.hpp"
-#include "HttpRequest/HttpRequest.hpp"
-#include "HttpResponce/HttpResponce.hpp"
+#include "HttpServer/HttpServer.hpp"
 
 #include <iostream>
+#include <future>
 
-#define PORT 1234
+int main(){//not yet but config file will be an arg
+    HttpServer http;
+    http.welcome();
 
+    std::future<void> EventualValue = std::async(std::launch::async, &HttpServer::serverRun, &http); //create a func
 
-int main(){
-    SocketHelper socket( PORT );
+    http.serverRun();
 
-    if(socket.bindSock() == -1){
-        socket.bindSock(PORT + 2);
-    }
+    using namespace std::this_thread; // sleep_for, sleep_until
+    using namespace std::chrono; // nanoseconds, system_clock, seconds
 
-
-    socket.startListen();
+    sleep_for(nanoseconds(1000));
     
-    int clientSocket;
-    
-    for(;;){
-        clientSocket = socket.acceptClient();
-    
-        std::string request = socket.recvData(clientSocket);
-
-        HttpRequest requestHandle(request);
-        HttpResponce responceHandle(requestHandle);
-        
-        socket.sendData(clientSocket, responceHandle.getResponce());
-    
-        shutdown(clientSocket, 2);
-    }
+    http.setIsRunning(false);
 
     return 1;
 }

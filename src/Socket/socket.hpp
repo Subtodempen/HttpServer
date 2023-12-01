@@ -14,8 +14,8 @@ class SocketHelper{
         int startListen();
         int acceptClient();// returns client socket 
         
-        std::string recvData(int clientSock);  //takes in client socket
-        int sendData(int clientSock, std::string data);  //again takes in he client socket
+        static std::string recvData(int clientSock);  //takes in client socket
+        static int sendData(int clientSock, std::string data);  //again takes in he client socket
 
     private:
         int sockDesc;

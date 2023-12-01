@@ -12,13 +12,17 @@ HttpResponce::HttpResponce(HttpRequest req){
 
 HttpResponce::~HttpResponce(){}
 
-void HttpResponce::parseHtml(std::string& html){
+void HttpResponce::parseHtml(std::string& html){    
+    const std::string cppStartTag = "<cpp>";
+    const std::string cppEndTag = "</cpp>";
+    
     std::string temp = html;
     
-    //remove <script> and <style> for html
+    //remove <script>, <style> and <cpp> for html
     removeSub(html, "<link rel=\"stylesheet\"", "ss\">");
     removeSub(html, "<script src=", "</script>");
 
+    removeSub(html, cppStartTag, cppEndTag);
 
     html += ("<style>\n" + findCss(temp) + "\n</style>");
     html += ("<script>\n" + findJs(temp) + "\n</script>");
@@ -28,7 +32,7 @@ void HttpResponce::parseHtml(std::string& html){
     std::string out = " ";
 
     try{
-        std::string binFName = codeHandle.compileCode(html);
+        std::string binFName = codeHandle.compileCode(temp);
         
         out = codeHandle.runCode(binFName);
     
@@ -37,9 +41,11 @@ void HttpResponce::parseHtml(std::string& html){
 
         exit(0);
     
-    }catch(...){}
+    }catch(...){
+        return;
+    }
 
-    std::cout<<":"<<out<<std::endl;
+    html.insert(temp.find(cppStartTag) - 30, out);
 }
 
 void HttpResponce::removeSub(std::string& str, std::string start, std::string end){
@@ -123,8 +129,6 @@ void HttpResponce::setResponce(HttpRequest req){
 std::string HttpResponce::getResponce(){
     return responce;
 }
-
-
 
 std::string HttpResponce::readFile(std::string fName){
     std::ifstream file(fName);
